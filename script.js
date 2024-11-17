@@ -119,36 +119,4 @@ function updateSummary() {
     monthlySummary.innerHTML = Object.entries(monthlyData)
         .map(([month, data]) => `<div>${month}: ${data.productive}/${data.total} productive</div>`)
         .join("");
-
-    // Render charts
-    renderChart("weekly-chart", "Weekly Productivity", Object.keys(weeklyData), Object.values(weeklyData).map(data => data.productive));
-    renderChart("monthly-chart", "Monthly Productivity", Object.keys(monthlyData), Object.values(monthlyData).map(data => data.productive));
-}
-
-// Fungsi untuk membuat diagram
-function renderChart(canvasId, label, labels, data) {
-    const ctx = document.getElementById(canvasId).getContext("2d");
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels,
-            datasets: [
-                {
-                    label,
-                    data,
-                    backgroundColor: "rgba(75, 192, 192, 0.2)",
-                    borderColor: "rgba(75, 192, 192, 1)",
-                    borderWidth: 1,
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
 }
