@@ -15,14 +15,17 @@
     </div>
 
     <div id="app" class="hidden">
-        <h1>Result Productivity Tracker</h1>
+        <h1>Triaz Productivity Tracker</h1>
         <div id="calendar"></div>
-        <h2>Weekly Summary</h2>
+        <h2>Summary Per Week</h2>
         <div id="weekly-summary"></div>
-        <h2>Monthly Summary</h2>
+        <canvas id="weekly-chart" width="600" height="300"></canvas>
+        <h2>Summary Per Month</h2>
         <div id="monthly-summary"></div>
+        <canvas id="monthly-chart" width="600" height="300"></canvas>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
