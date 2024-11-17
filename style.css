@@ -58,3 +58,8 @@ button.red {
     background-color: #f44336;
     color: white;
 }
+
+#summary {
+    margin-top: 30px;
+    text-align: left;
+}
