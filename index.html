@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triaz Productivity Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-page">
+        <h1>Triaz Productivity Tracker Login</h1>
+        <input type="password" id="pin" placeholder="Enter PIN">
+        <button onclick="checkPIN()">Login</button>
+        <p id="error-message" class="error"></p>
+    </div>
+
+    <div id="app" class="hidden">
+        <h1>Result Productivity Tracker</h1>
+        <div id="calendar"></div>
+        <div id="summary">
+            <h2>Weekly & Monthly Summary</h2>
+            <canvas id="contribution-chart"></canvas>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
