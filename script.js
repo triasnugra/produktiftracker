@@ -3,90 +3,118 @@ let productivityData = {};
 
 // Fungsi untuk memeriksa PIN
 function checkPIN() {
-    const inputPin = document.getElementById('pin').value;
-    const errorMessage = document.getElementById('error-message');
+    const inputPin = document.getElementById("pin").value;
+    const errorMessage = document.getElementById("error-message");
     if (inputPin === PIN) {
-        document.getElementById('login-page').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
+        document.getElementById("login-page").classList.add("hidden");
+        document.getElementById("app").classList.remove("hidden");
+        loadProductivityData();
         generateCalendar(2024);
     } else {
         errorMessage.textContent = "Incorrect PIN. Please try again.";
     }
 }
 
-// Fungsi untuk menghasilkan kalender
+// Fungsi untuk memuat data dari localStorage
+function loadProductivityData() {
+    const storedData = localStorage.getItem("productivityData");
+    if (storedData) {
+        productivityData = JSON.parse(storedData);
+    }
+}
+
+// Fungsi untuk menyimpan data ke localStorage
+function saveProductivityData() {
+    localStorage.setItem("productivityData", JSON.stringify(productivityData));
+}
+
+// Fungsi untuk membuat kalender
 function generateCalendar(year) {
-    const calendar = document.getElementById('calendar');
-    const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    calendar.innerHTML = '';
-    productivityData = {};
+    const calendar = document.getElementById("calendar");
+    const daysInMonth = [31, (year % 4 === 0 ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    calendar.innerHTML = "";
 
     for (let month = 0; month < 12; month++) {
         for (let day = 1; day <= daysInMonth[month]; day++) {
             const dateKey = `${year}-${month + 1}-${day}`;
-            productivityData[dateKey] = { "06-09": null, "09-12": null, "12-15": null, "15-18": null, "18-21": null };
+            if (!productivityData[dateKey]) {
+                productivityData[dateKey] = {
+                    "06-09": null,
+                    "09-12": null,
+                    "12-15": null,
+                    "15-18": null,
+                    "18-21": null,
+                };
+            }
 
-            const dateCell = document.createElement('div');
-            dateCell.className = 'date-cell';
+            const dateCell = document.createElement("div");
+            dateCell.className = "date-cell";
             dateCell.innerHTML = `<strong>${day}/${month + 1}</strong>`;
-            
-            for (let timeBlock of ["06-09", "09-12", "12-15", "15-18", "18-21"]) {
-                const timeDiv = document.createElement('div');
-                timeDiv.className = 'time-block';
-                timeDiv.innerHTML = `
-                    <span>${timeBlock}</span>
-                    <button class="green" onclick="setProductivity('${dateKey}', '${timeBlock}', true)">✔</button>
-                    <button class="red" onclick="setProductivity('${dateKey}', '${timeBlock}', false)">✘</button>
+            for (let time of ["06-09", "09-12", "12-15", "15-18", "18-21"]) {
+                const timeBlock = document.createElement("div");
+                timeBlock.className = "time-block";
+                const currentStatus = productivityData[dateKey][time];
+                timeBlock.innerHTML = `
+                    <span>${time}</span>
+                    <button class="green" onclick="setProductivity('${dateKey}', '${time}', true)" ${currentStatus === true ? "disabled" : ""}>✔</button>
+                    <button class="red" onclick="setProductivity('${dateKey}', '${time}', false)" ${currentStatus === false ? "disabled" : ""}>✘</button>
+                    <button class="reset" onclick="resetProductivity('${dateKey}', '${time}')">Reset</button>
                 `;
-                dateCell.appendChild(timeDiv);
+                dateCell.appendChild(timeBlock);
             }
             calendar.appendChild(dateCell);
         }
     }
-}
-
-// Fungsi untuk mengatur status produktivitas
-function setProductivity(date, timeBlock, isProductive) {
-    productivityData[date][timeBlock] = isProductive;
     updateSummary();
 }
 
-// Fungsi untuk memperbarui rekap produktivitas
+// Fungsi untuk mengatur produktivitas
+function setProductivity(date, time, productive) {
+    productivityData[date][time] = productive;
+    saveProductivityData();
+    generateCalendar(2024);
+}
+
+// Fungsi untuk mereset produktivitas
+function resetProductivity(date, time) {
+    productivityData[date][time] = null;
+    saveProductivityData();
+    generateCalendar(2024);
+}
+
+// Fungsi untuk memperbarui rekap
 function updateSummary() {
-    const weeklySummary = document.getElementById('weekly-summary');
-    const monthlySummary = document.getElementById('monthly-summary');
-    const weeks = {};
-    const months = {};
+    const weeklySummary = document.getElementById("weekly-summary");
+    const monthlySummary = document.getElementById("monthly-summary");
+    const weeklyData = {};
+    const monthlyData = {};
 
-    // Rekap data mingguan dan bulanan
     for (const date in productivityData) {
-        const [year, month, day] = date.split('-');
+        const [year, month, day] = date.split("-");
         const week = Math.ceil(day / 7);
-        const weekKey = `${year}-W${week}`;
-        const monthKey = `${year}-${month}`;
+        const weekKey = `Week ${week} (${month}/${year})`;
+        const monthKey = `${month}/${year}`;
 
-        if (!weeks[weekKey]) weeks[weekKey] = { productive: 0, total: 0 };
-        if (!months[monthKey]) months[monthKey] = { productive: 0, total: 0 };
+        if (!weeklyData[weekKey]) weeklyData[weekKey] = { productive: 0, total: 0 };
+        if (!monthlyData[monthKey]) monthlyData[monthKey] = { productive: 0, total: 0 };
 
         for (const time in productivityData[date]) {
             if (productivityData[date][time] !== null) {
-                weeks[weekKey].total++;
-                months[monthKey].total++;
+                weeklyData[weekKey].total++;
+                monthlyData[monthKey].total++;
                 if (productivityData[date][time]) {
-                    weeks[weekKey].productive++;
-                    months[monthKey].productive++;
+                    weeklyData[weekKey].productive++;
+                    monthlyData[monthKey].productive++;
                 }
             }
         }
     }
 
-    // Tampilkan rekap mingguan
-    weeklySummary.innerHTML = Object.entries(weeks).map(([week, data]) => {
-        return `<div>${week}: ${data.productive}/${data.total} productive</div>`;
-    }).join('');
+    weeklySummary.innerHTML = Object.entries(weeklyData)
+        .map(([week, data]) => `<div>${week}: ${data.productive}/${data.total} productive</div>`)
+        .join("");
 
-    // Tampilkan rekap bulanan
-    monthlySummary.innerHTML = Object.entries(months).map(([month, data]) => {
-        return `<div>${month}: ${data.productive}/${data.total} productive</div>`;
-    }).join('');
+    monthlySummary.innerHTML = Object.entries(monthlyData)
+        .map(([month, data]) => `<div>${month}: ${data.productive}/${data.total} productive</div>`)
+        .join("");
 }
