@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background-color: #f7f7f7;
     color: #333;
 }
 
@@ -11,42 +11,34 @@ body {
 }
 
 #login-page, #app {
-    text-align: center;
     padding: 20px;
-}
-
-#error-message {
-    color: red;
-    margin-top: 10px;
+    text-align: center;
 }
 
 #calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
-    margin-top: 20px;
+    margin: 20px 0;
 }
 
 .date-cell {
     background-color: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
-    position: relative;
 }
 
 .time-block {
     margin: 5px 0;
-    display: flex;
-    justify-content: space-between;
 }
 
 button {
     padding: 5px 10px;
+    margin-left: 5px;
     border: none;
-    cursor: pointer;
     border-radius: 3px;
-    font-size: 12px;
+    cursor: pointer;
 }
 
 button.green {
@@ -59,7 +51,12 @@ button.red {
     color: white;
 }
 
-#summary {
-    margin-top: 30px;
-    text-align: left;
+button.reset {
+    background-color: #ff9800;
+    color: white;
+}
+
+#error-message {
+    color: red;
+    margin-top: 10px;
 }
