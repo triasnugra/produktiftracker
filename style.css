@@ -2,8 +2,11 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f7f7f7;
-    color: #333;
+    background-color: #f9f9f9;
+}
+
+h1, h2 {
+    text-align: center;
 }
 
 .hidden {
@@ -11,33 +14,23 @@ body {
 }
 
 #login-page, #app {
+    max-width: 800px;
+    margin: 20px auto;
     padding: 20px;
-    text-align: center;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.date-cell {
-    background-color: #fff;
-    border: 1px solid #ccc;
+#pin {
+    width: 100%;
     padding: 10px;
-    text-align: center;
-}
-
-.time-block {
-    margin: 5px 0;
+    margin: 10px 0;
 }
 
 button {
-    padding: 5px 10px;
-    margin-left: 5px;
-    border: none;
-    border-radius: 3px;
+    padding: 10px 20px;
+    margin: 5px;
     cursor: pointer;
 }
 
@@ -56,7 +49,27 @@ button.reset {
     color: white;
 }
 
-#error-message {
+#calendar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.date-cell {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #f1f1f1;
+    width: 150px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.date-cell strong {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.error {
     color: red;
-    margin-top: 10px;
 }
